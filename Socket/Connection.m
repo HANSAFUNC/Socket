@@ -7,7 +7,7 @@
 //
 
 #import "Connection.h"
-//// Declare C callback functions
+//Declare C callback functions
 //void readStreamEventHandler(CFReadStreamRef stream, CFStreamEventType eventType, void *info);
 //void writeStreamEventHandler(CFWriteStreamRef stream, CFStreamEventType eventType, void *info);
 Connection  * connection = nil;
@@ -115,7 +115,7 @@ Connection  * connection = nil;
 
 //初始化化socket流
 -(BOOL)setupSocketStreams{
-    // Make sure streams were created correctly
+    
     if ( readStream == nil || writeStream == nil ) {
         [self close];
         return NO;
@@ -132,11 +132,11 @@ Connection  * connection = nil;
     
     //事件处理
     CFOptionFlags registeredEvents =
-    kCFStreamEventOpenCompleted  //打开流后处理
+    kCFStreamEventOpenCompleted       //打开流后处理
     | kCFStreamEventHasBytesAvailable //有可用数据处理
-    | kCFStreamEventCanAcceptBytes //可以接收数据处理
-    | kCFStreamEventEndEncountered //流关闭处理
-    | kCFStreamEventErrorOccurred; //发生错误处理
+    | kCFStreamEventCanAcceptBytes    //可以接收数据处理
+    | kCFStreamEventEndEncountered    //流关闭处理
+    | kCFStreamEventErrorOccurred;    //发生错误处理
     
     
     CFStreamClientContext ctx = {
@@ -242,8 +242,7 @@ void readStreamEventHandler(CFReadStreamRef stream, CFStreamEventType eventType,
             // We now have enough data to extract a meaningful packet.
             NSData* raw = [NSData dataWithBytes:[incomingDataBuffer bytes] length:packetBodySize];
             NSDictionary* packet = [NSKeyedUnarchiver unarchiveObjectWithData:raw];
-            
-            
+            //
 #warning 接收数据调用 delegate
             
             if ([self.delegate respondsToSelector:
@@ -343,7 +342,7 @@ void writeStreamEventHandler(CFWriteStreamRef stream, CFStreamEventType eventTyp
     [outgoingDataBuffer replaceBytesInRange:range withBytes:NULL length:0];
 }
 
-- (void) sendNetworkPacket:(NSDictionary *)packet
+- (void)sendNetworkPacket:(NSDictionary *)packet
 {
     //    NSString * msg = @"sbsbsbsbsbsbsbs";
     //    NSString * name = @"jk";
@@ -352,17 +351,17 @@ void writeStreamEventHandler(CFWriteStreamRef stream, CFStreamEventType eventTyp
     
     NSData * rawPacket = [NSKeyedArchiver archivedDataWithRootObject:packet];
     
-    NSLog(@"---%ld",rawPacket.length);
+    NSLog(@"---%ld",(long)rawPacket.length);
     
     // header
     //instrument
     NSInteger packetLength = [rawPacket length];
-    NSLog(@"packetLength %ld",packetLength);
+    NSLog(@"packetLength %ld",(long)packetLength);
     [outgoingDataBuffer appendBytes:&packetLength length:sizeof(int)];
-    NSLog(@"packetLength %ld",packetLength);
+    NSLog(@"packetLength %ld",(long)packetLength);
     // body
     [outgoingDataBuffer appendData:rawPacket];
-    NSLog(@"packetLength %ld",packetLength);
+    NSLog(@"packetLength %ld",(long)packetLength);
     
     // 尝试写
     [self writeOutgoingBufferToStream];
@@ -434,7 +433,7 @@ void writeStreamEventHandler(CFWriteStreamRef stream, CFStreamEventType eventTyp
     if ( sender != netService ) {
         return;
     }
-    NSLog(@"%@ %ld",netService.hostName,netService.port);
+    NSLog(@"%@ %ld",netService.hostName,(long)netService.port);
     
     [self.delegate connectionAttemptFailed:self];
     

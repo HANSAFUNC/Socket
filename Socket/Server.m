@@ -106,7 +106,7 @@
         NULL,
     };
     
-    //创建socket
+    //创建socket listen
     _listeningSocket = CFSocketCreate(kCFAllocatorDefault,
                                       PF_INET,
                                       SOCK_STREAM,
@@ -129,7 +129,10 @@
      *
      */
     
-    //SO_KEEPALIVE 用这个相当于心跳包
+    
+//    TCP_KEEPINTVL r;
+    
+    //SO_KEEPALIVE 
     setsockopt( socketNativeHandle, SOL_SOCKET, SO_REUSEADDR, (void *)&existingValue, sizeof(existingValue));
     struct sockaddr_in socketAddress;
     memset(&socketAddress, 0, sizeof(socketAddress));

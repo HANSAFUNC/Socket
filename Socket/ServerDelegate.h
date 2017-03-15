@@ -18,7 +18,7 @@
  *  @param server
  *  @param reason 错误原因
  */
-- (void) serverFailed:(Server *)server reason:(NSString *)reason;
+- (void)serverFailed:(Server *)server reason:(NSString *)reason;
 
 /**
  *  有新的用户连接的时候调用

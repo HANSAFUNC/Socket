@@ -17,7 +17,8 @@
 #import "UIView+CoverUtils.h"
 
 
-@interface ViewController ()<UITableViewDataSource,UITableViewDelegate,ConnectionDelegate,BaseServerDelegate>
+
+@interface ViewController ()<UITableViewDataSource,UITableViewDelegate,ConnectionDelegate,BaseServerDelegate,UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextField *sendMessageField;
 
@@ -32,13 +33,12 @@
     
     self = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateInitialViewController];
     _server = netServer;
-  
+    
     return self;;
     
 }
 
 -(void)serverTerminated:(id)room reason:(NSString *)string {
-    
     NSLog(@"%@",@"弹出遮盖并pop");
     [self.view showErrorView:string];
     [self.sytleServer stop];
@@ -50,7 +50,7 @@
     if (self.sytleServer) {
         [self.sytleServer start];
         self.sytleServer.delegate = self;
-
+        
     }
     
 }
@@ -59,10 +59,10 @@
     [self.tableView reloadData];
     UITableViewCell * cell = [self.tableView visibleCells].lastObject;
     CGRect rect = cell.frame;
-//    rect.origin.y+=self.tableView.rowHeight/2;
+    //    rect.origin.y+=self.tableView.rowHeight/2;
     [self.tableView scrollRectToVisible:rect animated:YES];
     
-
+    
     
 }
 
@@ -82,10 +82,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.messageArray = [NSMutableArray array];
+    self.sendMessageField.delegate = self;
     [self setupUI];
     
 }
 
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+    NSString *message = [_sendMessageField text];
+    [self.sytleServer broadcastChatMessage:message fromUser:NSFullUserName()];
+    [self.view endEditing:YES];
+    
+    return YES;
+}
 - (void)receivedNetworkPacket:(NSDictionary*)message viaConnection:(Connection*)connection {
     [self.messageArray addObject:message];
     [self.tableView reloadData];
@@ -113,8 +121,11 @@
 
 -(void)dealloc {
     self.sytleServer  = nil;
-    NSLog(@"销毁");
+    
 }
+
+
+
 
 
 @end

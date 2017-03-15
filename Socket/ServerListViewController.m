@@ -13,6 +13,7 @@
 #import "LoaclServer.h"
 #import "ClientServer.h"
 
+
 @interface ServerListViewController ()<ServerBrowserDelegate>
 
 @property (nonatomic ,strong) ServerBrowser * serverBrowser;
@@ -55,7 +56,7 @@
 
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-     NSNetService * netservice = self.serverBrowser.servers[indexPath.row];
+    NSNetService * netservice = self.serverBrowser.servers[indexPath.row];
     ViewController * chatVC = [[ViewController alloc]initWithNetServer:netservice];
     ClientServer *server = [[ClientServer alloc]initWithNetService:netservice];
     chatVC.sytleServer = server;
@@ -65,7 +66,7 @@
     
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-
+    
     return self.serverBrowser.servers.count;
 }
 
