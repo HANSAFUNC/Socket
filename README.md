@@ -1,2 +1,1 @@
-# JK_Socket
-基于CoreFoundation下的CFSocket和CFNetwork下的、CFStream写的Socket通讯->NSNetService 
+
